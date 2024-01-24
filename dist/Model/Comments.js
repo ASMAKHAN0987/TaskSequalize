@@ -29,12 +29,6 @@ __decorate([
         allowNull: false
     })
 ], CommentModel.prototype, "comment", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
-        allowNull: true
-    })
-], CommentModel.prototype, "parentId", void 0);
 exports.CommentModel = CommentModel = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,

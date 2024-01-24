@@ -20,9 +20,4 @@ export class CommentModel extends Model{
         allowNull:false
     })
     comment!:string;
-    @Column({
-        type: DataType.STRING,
-        allowNull:true
-    })
-    parentId!:string;
 }

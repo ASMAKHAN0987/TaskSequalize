@@ -16,6 +16,7 @@ const commentcreate = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const id = req.params.postId;
     const commenttobe = {
         PostModelId: id,
+        parentId: null,
         userId: (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.userId,
         username: (_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.username,
         comment: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.comment,
@@ -34,12 +35,44 @@ const commentcreate = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.commentcreate = commentcreate;
-const getAllComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.postId;
+const fetchCommentsRecursive = (postId, parentId = null) => __awaiter(void 0, void 0, void 0, function* () {
+    const comments = yield Comments_1.CommentModel.findAll({
+        where: {
+            PostModelId: postId,
+            parentId,
+        },
+        include: {
+            model: Comments_1.CommentModel,
+            as: 'Replies',
+        },
+    });
+    const results = [];
+    for (const comment of comments) {
+        const nestedReplies = yield fetchCommentsRecursive(postId, comment.id);
+        results.push(Object.assign(Object.assign({}, comment.toJSON()), { Replies: nestedReplies }));
+    }
+    return results;
+});
+//have to make new one
+const fetchCommentsForPost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (id) {
-            const post = yield Comments_1.CommentModel.findByPk(id);
-            res.json(post);
+        const comments = yield fetchCommentsRecursive(postId);
+        // Access the comments with nested replies
+        console.log('Comments for Post:', comments);
+        return comments;
+    }
+    catch (error) {
+        console.error('Error fetching comments for post:', error);
+        return null;
+    }
+});
+const getAllComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const commentId = req.params.postId;
+    const parentId = null;
+    try {
+        if (commentId) {
+            const result = yield fetchCommentsForPost(commentId);
+            res.status(200).json(result);
         }
         else {
             res.status(404).json({ message: "Comment with this post id is not found" });

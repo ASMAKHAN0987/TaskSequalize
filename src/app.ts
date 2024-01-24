@@ -27,8 +27,16 @@ app.listen(8080,()=>{
 })
 PostModel.hasMany(CommentModel,{onUpdate: 'CASCADE'})
 CommentModel.belongsTo(PostModel,{onDelete: 'CASCADE'})
+
+// Self-referencing association
+CommentModel.hasMany(CommentModel, { as: 'Replies', foreignKey: 'parentId' });
+
+// You might also want to add a foreign key constraint to ensure data integrity
+CommentModel.belongsTo(CommentModel, { as:'Comment', foreignKey: 'parentId', onDelete: 'CASCADE' });
+
 app.use('/api/auth',authRoutes);
 
 app.use('/api/posts',postRoute);
 
 app.use('/api/comment',commentRoute)
+
