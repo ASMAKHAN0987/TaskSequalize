@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.replytocomment = exports.getAllComments = exports.commentcreate = void 0;
 const Comments_1 = require("../Model/Comments");
+const Post_1 = require("../Model/Post");
 const commentcreate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
     const id = req.params.postId;
@@ -68,11 +69,20 @@ const getAllComments = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const commentId = req.params.postId;
     try {
         if (commentId) {
-            const result = yield fetchCommentsForPost(commentId);
-            res.status(200).json(result);
+            const post = yield Post_1.PostModel.findOne(req.params.id);
+            if (!post) {
+                res.status(404).send({
+                    success: false,
+                    message: "Post not found",
+                });
+            }
+            else {
+                const result = yield fetchCommentsForPost(commentId);
+                res.status(200).json({ post: post, comments: result });
+            }
         }
         else {
-            res.status(404).json({ message: "Comment with this post id is not found" });
+            res.status(404).json({ message: "id not found" });
         }
     }
     catch (err) {

@@ -62,11 +62,19 @@ export const getAllComments = async(req:any,res:any)=>{
    const commentId = req.params.postId;
     try{
         if(commentId){
-            const result = await fetchCommentsForPost(commentId)
-            res.status(200).json(result)
+          const post = await PostModel.findOne(req.params.id)
+          if(!post){
+           res.status(404).send({
+               success: false,
+               message: "Post not found",
+             });
             }else{
-            res.status(404).json({message: "Comment with this post id is not found"})
-        }
+            const result = await fetchCommentsForPost(commentId)
+            res.status(200).json({post:post,comments:result})
+           }
+      }else{
+        res.status(404).json({message:"id not found"})
+      }
    }
    catch(err){
         res.status(401).json({message:'problem with Getting posts from server',err:err})

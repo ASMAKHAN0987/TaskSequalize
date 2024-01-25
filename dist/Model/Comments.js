@@ -32,7 +32,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => CommentModel),
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.INTEGER // Specify the data type as INTEGER or any other suitable type
+        type: sequelize_typescript_1.DataType.INTEGER
     })
 ], CommentModel.prototype, "parentId", void 0);
 __decorate([
