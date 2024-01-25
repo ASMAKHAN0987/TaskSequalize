@@ -24,7 +24,7 @@ export const commentcreate = async(req:any,res:any)=>{
 
       }
 }
-const fetchCommentsRecursive = async (postId:number, parentId = null) :Promise<CommentWithReplies[]> => {
+const fetchCommentsRecursive = async (postId:number, parentId = null):Promise<CommentWithReplies[]>  => {
     const comments = await CommentModel.findAll({
       where: {
         PostModelId: postId,
@@ -47,6 +47,7 @@ const fetchCommentsRecursive = async (postId:number, parentId = null) :Promise<C
     }
   
     return results;
+    // return comments;
   };
 const fetchCommentsForPost = async (postId:number) => {
     try {

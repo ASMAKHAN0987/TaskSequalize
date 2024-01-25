@@ -1,4 +1,4 @@
-import {Table,Model,Column,DataType} from 'sequelize-typescript'
+import {Table,Model,Column,DataType, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript'
 
 @Table({
     timestamps:false,
@@ -20,4 +20,15 @@ export class CommentModel extends Model{
         allowNull:false
     })
     comment!:string;
+    @ForeignKey(() => CommentModel)
+    @Column({
+        type: DataType.INTEGER 
+    })
+    parentId!: number;
+
+    @BelongsTo(() => CommentModel, { as: 'Comment', onDelete: 'CASCADE' })
+    parentComment!: CommentModel;
+
+    @HasMany(() => CommentModel, { as: 'Replies'})
+    replies!: CommentModel[];
 }

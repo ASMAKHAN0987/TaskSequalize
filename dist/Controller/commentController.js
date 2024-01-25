@@ -52,23 +52,20 @@ const fetchCommentsRecursive = (postId, parentId = null) => __awaiter(void 0, vo
         results.push(Object.assign(Object.assign({}, comment.toJSON()), { Replies: nestedReplies }));
     }
     return results;
+    // return comments;
 });
-//have to make new one
 const fetchCommentsForPost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const comments = yield fetchCommentsRecursive(postId);
-        // Access the comments with nested replies
-        console.log('Comments for Post:', comments);
         return comments;
     }
-    catch (error) {
-        console.error('Error fetching comments for post:', error);
+    catch (err) {
+        console.error('Error fetching comments for post:', err);
         return null;
     }
 });
 const getAllComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const commentId = req.params.postId;
-    const parentId = null;
     try {
         if (commentId) {
             const result = yield fetchCommentsForPost(commentId);

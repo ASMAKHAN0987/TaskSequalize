@@ -29,6 +29,18 @@ __decorate([
         allowNull: false
     })
 ], CommentModel.prototype, "comment", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => CommentModel),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER // Specify the data type as INTEGER or any other suitable type
+    })
+], CommentModel.prototype, "parentId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => CommentModel, { as: 'Comment', onDelete: 'CASCADE' })
+], CommentModel.prototype, "parentComment", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => CommentModel, { as: 'Replies' })
+], CommentModel.prototype, "replies", void 0);
 exports.CommentModel = CommentModel = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,
